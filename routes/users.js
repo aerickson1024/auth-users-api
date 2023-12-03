@@ -1,23 +1,26 @@
 const express = require('express');
 const router = express.Router();
-// const { collection, getDocs } = require('firebase/firestore');
 
-// const setupDatabaseReference = (database) => {
-//   console.log('database connection passed');
-
-//   // console.log(database.collection('users'));
-//   const usersRef = database.collection('users');
-// }
+const getCollectionSnapshot = async (req, collection) => {
+  const ref = req.app.get('db').collection(collection);
+  return await ref.get();
+}
 
 router.get('/', async (req, res) => {
-  const usersRef = req.app.get('db').collection('users');
-  const snapshot = await usersRef.get();
+  const snapshot = await getCollectionSnapshot(req, 'users')
 
+  let users = [];
   snapshot.forEach(doc => {
-    console.log(doc.id, '=>', doc.data());
+    const { username, password } = doc.data();
+    users.push({
+      username: username,
+      password: password
+    });
+    // console.log(`Username: ${username}`);
+    // console.log(`Password: ${password}`);
   });
   
-  res.send('hi');
+  res.json(users);
 });
 
 router.get('/new', (req, res) => {
