@@ -1,35 +1,37 @@
 const express = require('express');
 const router = express.Router();
 
-const getCollectionSnapshot = async (req, collection) => {
-  const ref = req.app.get('db').collection(collection);
-  return await ref.get();
-}
+// const getCollectionSnapshot = async (req, collection) => {
+//   const ref = req.app.get('db').collection(collection);
+//   return await ref.get();
+// }
 
-router.get('/', async (req, res) => {
-  const snapshot = await getCollectionSnapshot(req, 'users')
+router.route('/')
+  .get((req, res) => {
+    // const snapshot = await getCollectionSnapshot(req, 'users')
 
-  let users = [];
-  snapshot.forEach(doc => {
-    const { username, password } = doc.data();
-    users.push({
-      username: username,
-      password: password
-    });
-    // console.log(`Username: ${username}`);
-    // console.log(`Password: ${password}`);
+    // let users = [];
+    // snapshot.forEach(doc => {
+    //   const { username, password } = doc.data();
+    //   users.push({
+    //     username: username,
+    //     password: password
+    //   });
+    //   // console.log(`Username: ${username}`);
+    //   // console.log(`Password: ${password}`);
+    // });
+
+    const users = [{
+      username: 'user1'
+    }, {
+      username: 'user2'
+    }];
+    
+    res.json(users);
+  })
+  .post((req, res) => {
+    res.send('Create user');
   });
-  
-  res.json(users);
-});
-
-router.get('/new', (req, res) => {
-  res.send('User New Form');
-});
-
-router.post('/', (req, res) => {
-  res.send('Create user');
-});
 
 router.route('/:id')
   .get((req, res) => {
